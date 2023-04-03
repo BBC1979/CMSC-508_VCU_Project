@@ -1,0 +1,194 @@
+--Create the drop box if the table exixts before.
+---DDl for all the tables
+drop table if exists occurs_on; 
+drop table if exists Streets; 
+drop table if exists Involved_in;
+drop table if exists Accidents;
+drop table if exists vehicles; 
+drop table if exists users; 
+
+----Create the table for users
+create table users(userID varchar(10) primary key, 
+                   userfirstname  varchar(50) not null, 
+                   userlastname varchar(50) not null, 
+                   email varchar(100) not null unique, 
+                   phoneno varchar(20) not null
+                   ); 
+--- create the table for the vehicles
+ create table vehicles(VehicleID  varchar(30) primary key, 
+                      model varchar(20) not null, 
+                      Type   varchar(20) not null, 
+                      plate varchar(30) not null unique, 
+                      OwnerUserID  varchar(10) not null, 
+                      foreign key(OwneruserID) references users(userID)  on delete cascade on update cascade
+                      ); 
+		      
+--- Cretae the table for the Accidents                      
+create table Accidents(AccidentID varchar(10) Primary key, 
+                     Location varchar(255) not null, 
+                     cause varchar(255) not null, 
+                     AccidentDate Date not null, 
+                     Description varchar(255)  not null, 
+                     Reporteduser varchar(10), 
+                     foreign key(ReportedUser) references users(UserID) on delete cascade on update cascade 
+				     );                     
+--- Create the table for the involve_in to in the accident vehicle information
+create table Involved_in (VehicleID varchar(30) ,
+			  AccidentID varchar(10), 
+                          userID varchar(10), 
+                          primary key(VehicleID, AccidentID,userID),
+                          foreign key(VehicleID) references vehicles(VehicleID) on delete cascade on update cascade , 
+                          foreign key(AccidentID) references Accidents(AccidentID) on delete cascade on update cascade ,
+                          foreign key(UserID) references users(UserID) on delete cascade on update cascade 
+						  );
+--- Create the table Streets to record the location				
+create table Streets(StreetID  varchar(10) primary key, 
+                     StreetName varchar(255) not null, 
+                     City varchar(20) not null, 
+                     state char(2) not null, 
+                     zipcode int not null, 
+                     speedlimit  int not null, 
+                     Roadcondition varchar(255)  not null, 
+                     Direction varchar(30) not null, 
+                     StreetType varchar(50) not null, 
+                     SafetyRating int not null,
+                     Bikelane varchar(5) not null
+                     ); 
+                     
+
+
+ 
+--- Create the table occurs on to record the accident occurs
+create table occurs_on (AccidentID varchar(10), 
+			streetID varchar(10), 
+                        primary key(AccidentID, StreetID), 
+                        foreign key(AccidentID) references Accidents(AccidentID) on delete cascade on update cascade , 
+                        foreign key(StreetID) references Streets(StreetID) on delete cascade on update cascade 
+                        ); 
+                        
+ 
+--- Insert the data in to the users table
+insert into users(userID, userfirstName, userlastName, email, phoneno)
+values('JNH','John', 'Hardy', 'johnhardy@gmail.com','202-478-2635'),
+      ('NHG', 'Robin', 'Gomez', 'robig@hotmail.com','295-233-4740'),
+      ('RTS', 'Haris', 'Subedi', 'haris@hotmail.com','202-578-3456'),
+      ('NPW', 'Neon', 'Marrigon', 'Nmarris@gmail.com','295-233-4740'),
+      ('BBC', 'Bohr', 'Sanpel', 'borhs@hotmail.com','205-738-3324'),
+      ('ABD','John','Smith','John@gmail.com','123-456-7788'),
+      ('JDG','William','Rob','Willian@gmail.com','345-788-9754'),
+      ('EDW','David','Blake','David@gmail.com','123-234-2345'),
+      ('KYR','Steven','King','Steven@gmail.com','567-755-446'), 
+      ('GYT','James','Kennedy','James@gmail.com','987-864-9657');
+      
+      
+      
+      
+   --- Insert the data into Vehicles table   
+insert into vehicles(vehicleID,model,Type,plate,OwneruserID)values
+   ('VN-124-231','XNR-12','Toyoya','VAX124','JNH'),
+   ('RN-224-251','XPR-10','Subishu','NYX123','NHG'),
+   ('KN-156-272','RNR-15','Honda','BAX724','NPW'),
+   ('NN-120-281','XNS-17','Ford', 'VAN120','JNH'),
+   ('MN-144-230','DNR-19','Madza','VAX126','NPW');
+
+          
+--- Insert the data into the Accidents table
+insert into Accidents(accidentID,Location,cause,AccidentDate,Description,Reporteduser)
+values ('12-123','Geton dr','Slippery','2022-02-15','Break out of control','ABD'),
+       ('10-523','Milbrooke dr','Wrong lane','2022-05-25','Driving in wrong way','JDG'),
+       ('82-923','Springfield road','High speed','2022-07-05','High speeding','EDW'),
+       ('92-193','West Broas street','Wromg way','2022-08-29','Drive in wrong way','KYR'),
+       ('62-520','Gaskin road','Trafic light','2022-03-17','Hit the traffic light','GYT');
+
+
+--- Insert the data in to Involved_in table
+insert into Involved_in(userID, vehicleID , accidentID) values
+        ('JNH', 'VN-124-231','12-123'),
+        ('NHG', 'RN-224-251','12-123'),
+        ('RTS', 'KN-156-272','10-523'),
+        ('NPW', 'NN-120-281','82-923'),
+        ('BBC', 'MN-144-230','92-193'),
+        ('JNH','VN-124-231','62-520'); 
+        
+--- Insert the data in to the streets table
+ insert into Streets(StreetID,StreetName,city,state,zipcode,speedlimit,Roadcondition,Direction,StreetType,SafetyRating,Bikelane)
+  values('AR','Dayton dr','Downtown','VA',23284, 78,'Good','South','Highway',8,'No'),
+  ('NP','Henry dr','Glen Allen','VA',23060, 45,'Snowfall','North East','Local',9,'Yes'),
+  ('ST','Milbrooke way','Petersberg','VA',23285, 60,'Slippery','East','Collectors',8,'No'),
+  ('NY','Peters dr','Chesterfil','VA',23049, 30,'Good','South East','local',10,'Yes'),
+  ('GT', 'Ford way', 'Woodbridge','VA',23543, 85,'Good','North','Highway',7,'No');
+
+
+--- Insert the data into the table occurs_on
+insert into occurs_on(AccidentID, streetID) values
+    ('12-123', 'AR'),
+    ('10-523', 'NP'),
+    ('82-923','ST'),
+    ('92-193','NY'),
+    ('62-520','GT');
+    
+--- Not this table record the audit of the accident vehicle
+ drop table if exists vehicles_audit;  
+ ---Create the table vehicles_audit
+create table vehicles_audit(VehicleID  varchar(30) primary key, 
+                            model varchar(20) not null, 
+                            Type   varchar(20) not null, 
+                            plate_old varchar(30) not null, 
+							plate_new varchar(30) not null, 
+                            OwnerUserID  varchar(10) not null, 
+                            changed_at date not null
+                            );                             
+                            
+--- apply the trigger function for the audit record
+ drop trigger if exists tri_vehicles_plate_audit;  
+
+--- Create the trigger function and update the information about the accident
+CREATE TRIGGER tri_vehicles_plate_audit
+AFTER UPDATE
+ON vehicles FOR EACH ROW
+BEGIN
+    IF OLD.plate <> new.plate THEN
+insert into vehicles_audit(vehicleID,model,Type,plate_old,plate_new,OwneruserID,changed_at)
+        VALUES(old.vehicleID, old.model, old.Type, old.plate,new.plate,old.OwneruserID,CURRENT_DATE);
+    END IF;
+END;
+
+	
+ --- Drop the table if exists before       
+ drop view if exists v_Accident_info;
+--- Create the table to record the vehicle accident information
+create view v_Accident_info as 
+select Accidents.AccidentID, location, cause, accidentDate, Description, 
+concat(userfirstname,' ',userlastname) Reporteduser, Involved_in.vehicleID,
+ model ,
+Type, plate, OwnerUserID, Streets.StreetID, StreetName, city, state, 
+zipcode, speedlimit, 
+roadcondition, direction, streettype, safetyRating, Bikelane
+from  Accidents join Involved_in 
+on Accidents.AccidentID = Involved_in.accidentID 
+join vehicles on vehicles.vehicleID = Involved_in.vehicleID 
+join occurs_on on occurs_on.AccidentID = Accidents.accidentID 
+join Streets on Streets.StreetID = occurs_on.streetID
+join users on users.userID = Accidents.reporteduser;
+
+---- Querries to check the vehicle accident information from the table
+select * from v_Accident_info; 
+
+
+
+-- procedure gives the information of how many accidents has happened with a given vehicles
+
+drop procedure if exists GetNoofAccidents;
+--- Procedure provides the information about the acccident vehicle
+create procedure GetNoofAccidents(IN vehicle_ID varchar(10) ) 
+begin 
+select count(accidentID) No_of_Accidents
+from Involved_in 
+where vehicleID = vehicle_ID; 
+end ;
+--- check the accident vehicle based on vin Id
+call GetNoofAccidents('VN-124-231'); 
+
+
+
+

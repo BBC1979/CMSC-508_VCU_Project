@@ -1,0 +1,64 @@
+Tony Kemp
+Bhoj Chertri 
+
+October 13th, 2022 
+
+
+Pedestrian Safety Rating System 
+
+
+
+	In the city of Richmond, the initiative to push biking and walking around the city to reduce congestion has been growing. With the increasing number of bikers and pedestrians in the city, it has become apparent that not all roads are treated or designed equal. Some streets include safety features such as sidewalks and protected bike lanes, while others offer nothing to people traveling outside of the car. To bring more awareness to this, we will create a database that users can report accidents or street safety ratings, that will enable us to give an interactive map to show where accidents occur freely, and which streets are best to consider when biking and walking. Though the stretch goal of this database is to have a tool to show the city which streets are dangerous and can use improvement, the realistic goal is for bikers and walkers alike to use to figure out which roads to avoid when getting to their desired destination. There will be four entities in total for the database, with 7 tables total derived from the Entity Diagram. 
+	The Vehicle entry will reflect what vehicle was involved in an accident. This would include plate number, color, and the type of vehicle. Keeping the report as general as possible would allow for a quick interface. Type of vehicle can refer to Cars, SUV, Trucks, and buses. The plate number may be useful in the case of a hit and run or a reported stolen vehicle.  
+	It is important to track who is reporting the accidents in the city, and how many people have reported the same accident. The person entity will represent the end user that is using the database. We could also track outliers of a certain user's report, and get a breakdown of why certain people find some roads safer than others. We may also find that some roads are biker friendly but not walker friendly. 
+	Which street the accident took place is the main unifier of this database, we need to get as many variables to understand which are contributors to safer roads, while which are detrimental. The safety score is a score that the user will input to rate the road on how safe it feels.  We may also see some correlation between different attributes such as higher speed roads may involve more semi-truck crashes, while a road with a higher safety rating may have protected bike lanes installed. 
+	The last entity is the Accident, which includes the details of the observed accident. Knowing what the crash was between, such as a car and a bike, or a bike and a pothole, would get a clearer picture on what makes a particular accident deadly. Along with the information gathered from the Streets entity, we can observe which combinations may lead to what kind of accidents. 
+	The goal of this project is to provide a true insight into where the safest streets are in Richmond, and give the people of Richmond some insight on which route they should take to their destination that offers a pleasant and safe experience. 
+
+Entities
+
+User:
+User(UserID: [PK], name [Varchar,Not_Null], email[Varchar,Not_Null])
+
+Vehicle:
+Vehicle(VehicleID: [PK], Model, Type, Plate)
+
+Reported:
+Reported(User, Vehicle)
+PK {User, Vehicle}
+FK {User} references {user.ID}, FK Vehicle references {Vehicle.ID}
+
+Accident:
+Accident(AccidentID: [PK], Location[Varchar,Not_Null]), Cause[VarChar], Date[DATE], Against) 
+
+Involved_In:
+Involved_In(Vehicle, Accident)
+FK {Vehicle} references {vehicle.ID}, FK Accident{Accident.ID}
+
+Street:
+Street(StreetID:[PK], StreetName[Varchar,Not_Null]), Speed Limit[INTEGER, NOT_NULL], Condition[Varchar,Not_Null]), Direction[Varchar,Not_Null]), Kind of Street[Varchar,Not_Null]), Safety Rating[INTEGER,Not_Null],Bike Lane[Varchar,Not_Null]))
+
+
+Occurs_On:
+Occurs_On(AccidentID, StreetID)
+PK {Accident, Street}
+FK {Accident} references {Accident.ID}, FK Street references {Street.ID}
+
+Functional Dependencies
+User (User_ID, username, email, name,)
+F = { Person_ID -> username, password, email, name }
+Vehicle (Vehicle_ID, model, type, plate)
+F = { Vehicle_ID -> model,type,plate }
+Reported (User_ID, Vehicle_ID)
+F = {User_ID -> Vehicle_ID }
+Accident (Accident_ID, Location, Cause, Date, Against)
+F = { Accident_ID-> Location, Cause, Date, Against}
+
+Involved_In (Vehicle, Accident))
+F = { Vehicle_ID -> Accident_ID}
+Street (StreetID, StreetName, Speed Limit, Condition, Direction, Kind of Street, Safety Rating, 
+Bike Lane)
+F = {StreetID -> StreetName, Speed Limit, Condition, Direction, Kind of Street, Safety Rating, 
+Bike_Lane}
+Occurs_On (Accident_ID, Street_ID)
+F = { Accident_ID-> Street_ID}
